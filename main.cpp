@@ -130,7 +130,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
         RECT rect;
         GetClientRect(hwnd, &rect);
 
-        // ✅ 清屏（避免残影）
+        // 清屏
         HBRUSH hBrush = CreateSolidBrush(RGB(0, 0, 0));
         FillRect(hdc, &rect, hBrush);
         DeleteObject(hBrush);
@@ -197,17 +197,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int)
     RegisterClassW(&wc);
 
     hwnd = CreateWindowExW(
-        WS_EX_TOPMOST | WS_EX_LAYERED | WS_EX_TOOLWINDOW,
+        WS_EX_TOPMOST | WS_EX_LAYERED | WS_EX_TOOLWINDOW | WS_EX_NOACTIVATE,
         CLASS_NAME,
         L"",
         WS_POPUP,
         100, 100, 280, 120,
         NULL, NULL, hInstance, NULL);
 
-    // ✅ 推荐：透明度模式（避免拖影）
     SetLayeredWindowAttributes(hwnd, RGB(0, 0, 0), 0, LWA_COLORKEY);
 
-    ShowWindow(hwnd, SW_SHOW);
+    ShowWindow(hwnd, SW_SHOWNOACTIVATE);
 
     std::thread(NetThread).detach();
 
